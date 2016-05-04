@@ -1,7 +1,10 @@
 
 require "isNodeJS"
 
+{ Void } = require "type-utils"
+
 childProcess = require "child_process" if isNodeJS
+repeatString = require "repeat-string"
 Logger = require "Logger"
 Type = require "Type"
 hook = require "hook"
@@ -12,26 +15,39 @@ type = Type "MainLogger"
 
 type.inherits Logger
 
-type.optionDefaults =
-  process: global.process if isNodeJS
-
 type.defineValues
 
   cursor: -> Cursor this
+
+  _process: ->
+    return unless isNodeJS
+    proc = global.process
+    if proc.stdout
+      @_print = (message) ->
+        proc.stdout.write message
+    return proc
 
 type.initInstance ->
 
   require("temp-log")._ = this
 
+  @isColorful = @_process?.stdout?.isTTY is yes
+
   hook.after this, "_printChunk", (result, chunk) ->
     if chunk.message is @ln then @cursor._x = 0
     else @cursor._x += chunk.length
+
+type.defineProperties
+
+  size: get: ->
+    return null unless @_process?.stdout?.isTTY
+    @_process.stdout.getWindowSize()
 
 type.overrideMethods
 
   __willClear: ->
 
-    return unless isNodeJS and @process
+    return unless isNodeJS
 
     @cursor._x = @cursor._y = 0
 
@@ -39,7 +55,7 @@ type.overrideMethods
 
   __willClearLine: (line) ->
 
-    return unless isNodeJS and @process
+    return unless isNodeJS
 
     isCurrentLine = line.index is @_line
 

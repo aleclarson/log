@@ -7,6 +7,7 @@
     "Type": "aleclarson/Type#1.0.0",
     "hook": "aleclarson/hook#1.0.0",
     "isNodeJS": "aleclarson/isNodeJS#1.0.0",
+    "repeat-string": "aleclarson/repeat-string#1.5.4",
     "sync": "aleclarson/sync#1.0.0"
   },
   "lotus": {
