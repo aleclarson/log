@@ -43,7 +43,6 @@ type.defineValues({
 
 type.initInstance(function() {
   var ref, ref1;
-  require("temp-log")._ = this;
   this.isColorful = ((ref = this._process) != null ? (ref1 = ref.stdout) != null ? ref1.isTTY : void 0 : void 0) === true;
   return hook.after(this, "_printChunk", function(result, chunk) {
     if (chunk.message === this.ln) {

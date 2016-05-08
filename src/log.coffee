@@ -29,8 +29,6 @@ type.defineValues
 
 type.initInstance ->
 
-  require("temp-log")._ = this
-
   @isColorful = @_process?.stdout?.isTTY is yes
 
   hook.after this, "_printChunk", (result, chunk) ->
