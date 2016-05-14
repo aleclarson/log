@@ -51,7 +51,6 @@ type.defineProperties({
   },
   isHidden: {
     value: true,
-    assign: false,
     didSet: function(newValue, oldValue) {
       if (newValue === oldValue) {
         return;
@@ -101,16 +100,6 @@ type.defineMethods({
     position = this._savedPositions.pop();
     this._restoredPositions.push(position);
     this.move(position);
-  },
-  scrollUp: function(n) {
-    if (n == null) {
-      n = 1;
-    }
-  },
-  scrollDown: function(n) {
-    if (n == null) {
-      n = 1;
-    }
   },
   _up: function(n) {
     if (n == null) {

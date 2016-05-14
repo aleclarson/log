@@ -1,8 +1,6 @@
-var Cursor, Logger, Type, Void, childProcess, hook, repeatString, type;
+var Cursor, Logger, Type, Void, childProcess, didExit, hook, repeatString, type;
 
 require("isNodeJS");
-
-Void = require("type-utils").Void;
 
 if (isNodeJS) {
   childProcess = require("child_process");
@@ -10,7 +8,11 @@ if (isNodeJS) {
 
 repeatString = require("repeat-string");
 
+didExit = require("exit");
+
 Logger = require("Logger");
+
+Void = require("Void");
 
 Type = require("Type");
 
@@ -24,6 +26,9 @@ type.inherits(Logger);
 
 type.defineValues({
   cursor: function() {
+    if (!isNodeJS) {
+      return;
+    }
     return Cursor(this);
   },
   _process: function() {
@@ -41,23 +46,31 @@ type.defineValues({
   }
 });
 
-type.initInstance(function() {
-  var ref, ref1;
-  this.isColorful = ((ref = this._process) != null ? (ref1 = ref.stdout) != null ? ref1.isTTY : void 0 : void 0) === true;
-  return hook.after(this, "_printChunk", function(result, chunk) {
-    if (chunk.message === this.ln) {
-      return this.cursor._x = 0;
-    } else {
-      return this.cursor._x += chunk.length;
-    }
+if (isNodeJS) {
+  type.initInstance(function() {
+    var ref;
+    this.isColorful = ((ref = this._process.stdout) != null ? ref.isTTY : void 0) === true;
+    this.cursor.isHidden = true;
+    didExit.once((function(_this) {
+      return function() {
+        return _this.cursor.isHidden = false;
+      };
+    })(this));
+    return hook.after(this, "_printChunk", function(result, chunk) {
+      if (chunk.message === this.ln) {
+        return this.cursor._x = 0;
+      } else {
+        return this.cursor._x += chunk.length;
+      }
+    });
   });
-});
+}
 
 type.defineProperties({
   size: {
     get: function() {
-      var ref, ref1;
-      if (!((ref = this._process) != null ? (ref1 = ref.stdout) != null ? ref1.isTTY : void 0 : void 0)) {
+      var ref;
+      if (!(isNodeJS && ((ref = this._process.stdout) != null ? ref.isTTY : void 0))) {
         return null;
       }
       return this._process.stdout.getWindowSize();
@@ -65,43 +78,39 @@ type.defineProperties({
   }
 });
 
-type.overrideMethods({
-  __willClear: function() {
-    if (!isNodeJS) {
-      return;
-    }
-    this.cursor._x = this.cursor._y = 0;
-    return this._print(childProcess.execSync("printf '\\33c\\e[3J'", {
-      encoding: "utf8"
-    }));
-  },
-  __willClearLine: function(line) {
-    var isCurrentLine, message;
-    if (!isNodeJS) {
-      return;
-    }
-    isCurrentLine = line.index === this._line;
-    if (isCurrentLine) {
-      this.cursor.x = 0;
-    } else {
-      this.cursor.save();
-      this.cursor.move({
-        x: 0,
-        y: line.index
+if (isNodeJS) {
+  type.overrideMethods({
+    __willClear: function() {
+      this.cursor._x = this.cursor._y = 0;
+      return this._print(childProcess.execSync("printf '\\33c\\e[3J'", {
+        encoding: "utf8"
+      }));
+    },
+    __willClearLine: function(line) {
+      var isCurrentLine, message;
+      isCurrentLine = line.index === this._line;
+      if (isCurrentLine) {
+        this.cursor.x = 0;
+      } else {
+        this.cursor.save();
+        this.cursor.move({
+          x: 0,
+          y: line.index
+        });
+      }
+      message = repeatString(" ", line.length);
+      this._printToChunk(message, {
+        line: line.index,
+        hidden: true
       });
+      if (isCurrentLine) {
+        return this.cursor.x = 0;
+      } else {
+        return this.cursor.restore();
+      }
     }
-    message = repeatString(" ", line.length);
-    this._printToChunk(message, {
-      line: line.index,
-      hidden: true
-    });
-    if (isCurrentLine) {
-      return this.cursor.x = 0;
-    } else {
-      return this.cursor.restore();
-    }
-  }
-});
+  });
+}
 
 module.exports = type.construct();
 

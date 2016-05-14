@@ -1,6 +1,4 @@
 
-# { resolve } = require "path"
-
 Type = require "Type"
 sync = require "sync"
 
@@ -31,7 +29,6 @@ type.defineProperties
 
   isHidden:
     value: yes
-    assign: no
     didSet: (newValue, oldValue) ->
       return if newValue is oldValue
       @_log.ansi "?25" + if newValue then "l" else "h"
@@ -66,17 +63,6 @@ type.defineMethods
     @_restoredPositions.push position
     @move position
     return
-
-  scrollUp: (n = 1) ->
-    # TODO: Fix this.
-    # script = sync.read resolve __dirname + "/../../scripts/scroll-up.applescript"
-    # script = script.replace /'/g, "\\'"
-    # execSync "osascript -e '#{script}' #{process.pid}", encoding: "utf8"
-
-  scrollDown: (n = 1) ->
-    # TODO: Fix this.
-    # @_log.ansi "#{n}T" if n > 0
-    # return
 
   _up: (n = 1) -> @_log.ansi "#{n}F"
 

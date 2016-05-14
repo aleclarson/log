@@ -1,11 +1,11 @@
 
 require "isNodeJS"
 
-{ Void } = require "type-utils"
-
 childProcess = require "child_process" if isNodeJS
 repeatString = require "repeat-string"
+didExit = require "exit"
 Logger = require "Logger"
+Void = require "Void"
 Type = require "Type"
 hook = require "hook"
 
@@ -17,7 +17,9 @@ type.inherits Logger
 
 type.defineValues
 
-  cursor: -> Cursor this
+  cursor: ->
+    return unless isNodeJS
+    return Cursor this
 
   _process: ->
     return unless isNodeJS
@@ -27,9 +29,13 @@ type.defineValues
         proc.stdout.write message
     return proc
 
-type.initInstance ->
+if isNodeJS then type.initInstance ->
 
-  @isColorful = @_process?.stdout?.isTTY is yes
+  @isColorful = @_process.stdout?.isTTY is yes
+
+  @cursor.isHidden = yes
+  didExit.once =>
+    @cursor.isHidden = no
 
   hook.after this, "_printChunk", (result, chunk) ->
     if chunk.message is @ln then @cursor._x = 0
@@ -38,22 +44,18 @@ type.initInstance ->
 type.defineProperties
 
   size: get: ->
-    return null unless @_process?.stdout?.isTTY
-    @_process.stdout.getWindowSize()
+    return null unless isNodeJS and @_process.stdout?.isTTY
+    return @_process.stdout.getWindowSize()
 
-type.overrideMethods
+if isNodeJS then type.overrideMethods
 
   __willClear: ->
-
-    return unless isNodeJS
 
     @cursor._x = @cursor._y = 0
 
     @_print childProcess.execSync "printf '\\33c\\e[3J'", encoding: "utf8"
 
   __willClearLine: (line) ->
-
-    return unless isNodeJS
 
     isCurrentLine = line.index is @_line
 

@@ -5,6 +5,7 @@
   "dependencies": {
     "Logger": "aleclarson/Logger#1.0.0",
     "Type": "aleclarson/Type#1.0.0",
+    "exit": "aleclarson/exit#1.0.0",
     "hook": "aleclarson/hook#1.0.0",
     "isNodeJS": "aleclarson/isNodeJS#1.0.0",
     "repeat-string": "aleclarson/repeat-string#1.5.4",
@@ -14,6 +15,9 @@
   "lotus": {
     "plugins": [
       "lotus-coffee"
+    ],
+    "implicitDependencies": [
+      "child_process"
     ]
   }
 }
