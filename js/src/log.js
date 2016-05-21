@@ -24,7 +24,7 @@ type = Type("MainLogger");
 
 type.inherits(Logger);
 
-type.defineValues({
+type.defineFrozenValues({
   cursor: function() {
     if (!isNodeJS) {
       return;

@@ -15,7 +15,7 @@ type = Type "MainLogger"
 
 type.inherits Logger
 
-type.defineValues
+type.defineFrozenValues
 
   cursor: ->
     return unless isNodeJS
