@@ -34,7 +34,10 @@ type.defineFrozenValues({
   _process: function() {
     var proc;
     if (!isNodeJS) {
-      return;
+      this._print = function(message) {
+        return console.log(message);
+      };
+      return null;
     }
     proc = global.process;
     if (proc.stdout) {

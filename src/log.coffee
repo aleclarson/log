@@ -22,7 +22,10 @@ type.defineFrozenValues
     return Cursor this
 
   _process: ->
-    return unless isNodeJS
+    if not isNodeJS
+      @_print = (message) ->
+        console.log message
+      return null
     proc = global.process
     if proc.stdout
       @_print = (message) ->
