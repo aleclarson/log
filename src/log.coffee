@@ -11,46 +11,50 @@ hook = require "hook"
 
 Cursor = require "./Cursor"
 
+isTTY = isNodeJS and (process.stdout?.isTTY is yes)
+
 type = Type "MainLogger"
 
 type.inherits Logger
 
 type.defineFrozenValues
 
-  cursor: ->
-    return unless isNodeJS
-    return Cursor this
+  cursor: -> Cursor this if isTTY
 
   _process: ->
+
     if not isNodeJS
       @_print = (message) ->
         console.log message
       return null
-    proc = global.process
-    if proc.stdout
+
+    if process.stdout
       @_print = (message) ->
-        proc.stdout.write message
-    return proc
+        process.stdout.write message
 
-if isNodeJS then type.initInstance ->
+    return process
 
-  @isColorful = @_process.stdout?.isTTY is yes
+isNodeJS and type.initInstance ->
 
-  @cursor.isHidden = yes
-  didExit.once =>
-    @cursor.isHidden = no
+  @isColorful = isTTY
 
-  hook.after this, "_printChunk", (result, chunk) ->
-    if chunk.message is @ln then @cursor._x = 0
-    else @cursor._x += chunk.length
+  if isTTY
+
+    hook.after this, "_printChunk", (result, chunk) ->
+      if chunk.message is @ln then @cursor._x = 0
+      else @cursor._x += chunk.length
+
+    @cursor.isHidden = yes
+    didExit.once =>
+      @cursor.isHidden = no
 
 type.defineProperties
 
   size: get: ->
-    return null unless isNodeJS and @_process.stdout?.isTTY
+    return null if not isTTY
     return @_process.stdout.getWindowSize()
 
-if isNodeJS then type.overrideMethods
+isTTY and type.overrideMethods
 
   __willClear: ->
 
