@@ -3,7 +3,7 @@ require "isNodeJS"
 
 childProcess = require "child_process" if isNodeJS
 repeatString = require "repeat-string"
-didExit = require "exit"
+didExit = require "didExit"
 Logger = require "Logger"
 Void = require "Void"
 Type = require "Type"
@@ -45,7 +45,7 @@ isNodeJS and type.initInstance ->
       else @cursor._x += chunk.length
 
     @cursor.isHidden = yes
-    didExit.once =>
+    didExit 1, =>
       @cursor.isHidden = no
 
 type.defineProperties

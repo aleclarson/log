@@ -8,7 +8,7 @@ if (isNodeJS) {
 
 repeatString = require("repeat-string");
 
-didExit = require("exit");
+didExit = require("didExit");
 
 Logger = require("Logger");
 
@@ -59,7 +59,7 @@ isNodeJS && type.initInstance(function() {
       }
     });
     this.cursor.isHidden = true;
-    return didExit.once((function(_this) {
+    return didExit(1, (function(_this) {
       return function() {
         return _this.cursor.isHidden = false;
       };
