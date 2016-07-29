@@ -1,7 +1,7 @@
 {
   "name": "log",
   "version": "1.0.0",
-  "main": "js/src/log",
+  "main": "js/log",
   "dependencies": {
     "Logger": "aleclarson/Logger#1.0.1",
     "Type": "aleclarson/Type#1.1.0",

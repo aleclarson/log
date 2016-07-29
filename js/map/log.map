@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "log.js",
-  "sourceRoot": "../../../src",
+  "sourceRoot": "../../src",
   "sources": [
     "log.coffee"
   ],
