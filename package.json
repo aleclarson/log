@@ -4,7 +4,7 @@
   "main": "js/src/log",
   "dependencies": {
     "Logger": "aleclarson/Logger#1.0.0",
-    "Type": "aleclarson/Type#1.0.0",
+    "Type": "aleclarson/Type#1.1.0",
     "Void": "aleclarson/Void#1.0.0",
     "didExit": "aleclarson/didExit#1.0.0",
     "hook": "aleclarson/hook#1.0.0",
