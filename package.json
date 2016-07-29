@@ -1,10 +1,10 @@
 {
   "name": "log",
-  "version": "1.0.0",
-  "main": "js/src/log",
+  "version": "1.0.1",
+  "main": "js/log",
   "dependencies": {
-    "Logger": "aleclarson/Logger#1.0.0",
-    "Type": "aleclarson/Type#1.0.0",
+    "Logger": "aleclarson/Logger#1.0.1",
+    "Type": "aleclarson/Type#1.1.0",
     "Void": "aleclarson/Void#1.0.0",
     "didExit": "aleclarson/didExit#1.0.0",
     "hook": "aleclarson/hook#1.0.0",

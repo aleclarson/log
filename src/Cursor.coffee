@@ -6,9 +6,6 @@ type = Type "Logger_Cursor"
 
 type.defineProperties
 
-  position: get: ->
-    { @x, @y }
-
   x:
     get: -> @_x
     set: (newValue, oldValue) ->
@@ -46,6 +43,10 @@ type.defineValues
   _savedPositions: -> []
 
   _restoredPositions: -> []
+
+type.defineGetters
+
+  position: -> { @x, @y }
 
 type.defineMethods
 

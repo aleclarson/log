@@ -19,7 +19,7 @@ type.inherits Logger
 
 type.defineFrozenValues
 
-  cursor: -> Cursor this if isTTY
+  cursor: isTTY and -> Cursor this
 
   _process: ->
 
@@ -48,9 +48,9 @@ isNodeJS and type.initInstance ->
     didExit 1, =>
       @cursor.isHidden = no
 
-type.defineProperties
+type.defineGetters
 
-  size: get: ->
+  size: ->
     return null if not isTTY
     return @_process.stdout.getWindowSize()
 
