@@ -27,10 +27,8 @@ type = Type("MainLogger");
 type.inherits(Logger);
 
 type.defineFrozenValues({
-  cursor: function() {
-    if (isTTY) {
-      return Cursor(this);
-    }
+  cursor: isTTY && function() {
+    return Cursor(this);
   },
   _process: function() {
     if (!isNodeJS) {
@@ -67,14 +65,12 @@ isNodeJS && type.initInstance(function() {
   }
 });
 
-type.defineProperties({
-  size: {
-    get: function() {
-      if (!isTTY) {
-        return null;
-      }
-      return this._process.stdout.getWindowSize();
+type.defineGetters({
+  size: function() {
+    if (!isTTY) {
+      return null;
     }
+    return this._process.stdout.getWindowSize();
   }
 });
 
@@ -112,4 +108,4 @@ isTTY && type.overrideMethods({
 
 module.exports = type.construct();
 
-//# sourceMappingURL=../../map/src/log.map
+//# sourceMappingURL=map/log.map

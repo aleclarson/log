@@ -7,14 +7,6 @@ sync = require("sync");
 type = Type("Logger_Cursor");
 
 type.defineProperties({
-  position: {
-    get: function() {
-      return {
-        x: this.x,
-        y: this.y
-      };
-    }
-  },
   x: {
     get: function() {
       return this._x;
@@ -81,6 +73,15 @@ type.defineValues({
   }
 });
 
+type.defineGetters({
+  position: function() {
+    return {
+      x: this.x,
+      y: this.y
+    };
+  }
+});
+
 type.defineMethods({
   move: function(arg) {
     var x, y;
@@ -129,4 +130,4 @@ type.defineMethods({
 
 module.exports = type.build();
 
-//# sourceMappingURL=../../map/src/Cursor.map
+//# sourceMappingURL=map/Cursor.map
