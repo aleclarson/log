@@ -23,6 +23,12 @@ type.defineFrozenValues
 
   _process: ->
 
+    if isReactNative and global.nativeLoggingHook
+      @_print = (message) ->
+        global.nativeLoggingHook message, 1
+        console.log message
+      return null
+
     if not isNodeJS
       @_print = (message) ->
         console.log message
@@ -34,19 +40,20 @@ type.defineFrozenValues
 
     return process
 
-isNodeJS and type.initInstance ->
+isNodeJS and
+type.initInstance ->
 
   @isColorful = isTTY
+  return unless isTTY
 
-  if isTTY
+  hook.after this, "_printChunk", (result, chunk) ->
+    if chunk.message is @ln then @cursor._x = 0
+    else @cursor._x += chunk.length
 
-    hook.after this, "_printChunk", (result, chunk) ->
-      if chunk.message is @ln then @cursor._x = 0
-      else @cursor._x += chunk.length
-
-    @cursor.isHidden = yes
-    didExit 1, =>
-      @cursor.isHidden = no
+  @cursor.isHidden = yes
+  onExit = => @cursor.isHidden = no
+  onExit = didExit 1, onExit
+  onExit.start()
 
 type.defineGetters
 
@@ -54,7 +61,8 @@ type.defineGetters
     return null if not isTTY
     return @_process.stdout.getWindowSize()
 
-isTTY and type.overrideMethods
+isTTY and
+type.overrideMethods
 
   __willClear: ->
 

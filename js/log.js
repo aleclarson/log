@@ -31,6 +31,13 @@ type.defineFrozenValues({
     return Cursor(this);
   },
   _process: function() {
+    if (isReactNative && global.nativeLoggingHook) {
+      this._print = function(message) {
+        global.nativeLoggingHook(message, 1);
+        return console.log(message);
+      };
+      return null;
+    }
     if (!isNodeJS) {
       this._print = function(message) {
         return console.log(message);
@@ -47,22 +54,26 @@ type.defineFrozenValues({
 });
 
 isNodeJS && type.initInstance(function() {
+  var onExit;
   this.isColorful = isTTY;
-  if (isTTY) {
-    hook.after(this, "_printChunk", function(result, chunk) {
-      if (chunk.message === this.ln) {
-        return this.cursor._x = 0;
-      } else {
-        return this.cursor._x += chunk.length;
-      }
-    });
-    this.cursor.isHidden = true;
-    return didExit(1, (function(_this) {
-      return function() {
-        return _this.cursor.isHidden = false;
-      };
-    })(this));
+  if (!isTTY) {
+    return;
   }
+  hook.after(this, "_printChunk", function(result, chunk) {
+    if (chunk.message === this.ln) {
+      return this.cursor._x = 0;
+    } else {
+      return this.cursor._x += chunk.length;
+    }
+  });
+  this.cursor.isHidden = true;
+  onExit = (function(_this) {
+    return function() {
+      return _this.cursor.isHidden = false;
+    };
+  })(this);
+  onExit = didExit(1, onExit);
+  return onExit.start();
 });
 
 type.defineGetters({
