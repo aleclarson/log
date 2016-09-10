@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "main": "js/log",
   "dependencies": {
-    "Logger": "aleclarson/Logger#1.0.1",
+    "Logger": "aleclarson/Logger#2.0.0",
     "Type": "aleclarson/Type#1.1.0",
     "clampValue": "aleclarson/clampValue#1.0.0",
     "hook": "aleclarson/hook#1.0.0",
