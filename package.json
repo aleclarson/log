@@ -5,11 +5,9 @@
   "dependencies": {
     "Logger": "aleclarson/Logger#1.0.1",
     "Type": "aleclarson/Type#1.1.0",
-    "Void": "aleclarson/Void#1.0.0",
-    "didExit": "aleclarson/didExit#1.0.0",
+    "clampValue": "aleclarson/clampValue#1.0.0",
     "hook": "aleclarson/hook#1.0.0",
     "isNodeJS": "aleclarson/isNodeJS#1.0.0",
-    "repeat-string": "aleclarson/repeat-string#1.5.4",
     "sync": "aleclarson/sync#1.0.0"
   },
   "lotus": {
