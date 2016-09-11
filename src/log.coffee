@@ -1,6 +1,7 @@
 
 require "isNodeJS"
 
+repeatString = require "repeat-string"
 clampValue = require "clampValue"
 Logger = require "Logger"
 Type = require "Type"
@@ -68,6 +69,13 @@ type.defineMethods
         if newValue > oldValue
         then "#{newValue - oldValue}E"
         else "#{oldValue - newValue}F"
+    return
+
+  clearLine: ->
+    @setOffset 0
+    message = repeatString " ", @line.length
+    @_printToChunk message, {line: @_line, hidden: yes}
+    @setOffset 0
     return
 
 module.exports = type.construct()
