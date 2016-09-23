@@ -1,8 +1,7 @@
 
-require "isNodeJS"
-
 repeatString = require "repeat-string"
 clampValue = require "clampValue"
+isNodeJS = require "isNodeJS"
 Logger = require "Logger"
 Type = require "Type"
 hook = require "hook"
