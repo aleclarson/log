@@ -1,23 +1,29 @@
 {
   "name": "log",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "main": "js/log",
+  "plugins": [
+    "lotus-coffee"
+  ],
+  "scripts": {
+    "build": "coffee -cb -o js src",
+    "postinstall": "postinstall-build js 'npm run build'"
+  },
   "dependencies": {
-    "Logger": "aleclarson/Logger#1.0.1",
+    "Logger": "aleclarson/Logger#2.0.0",
     "Type": "aleclarson/Type#1.1.0",
-    "Void": "aleclarson/Void#1.0.0",
-    "didExit": "aleclarson/didExit#1.0.0",
+    "clampValue": "aleclarson/clampValue#1.0.0",
     "hook": "aleclarson/hook#1.0.0",
-    "isNodeJS": "aleclarson/isNodeJS#1.0.0",
+    "isNodeJS": "aleclarson/isNodeJS#2.0.0",
+    "isReactNative": "aleclarson/isReactNative#2.0.0",
+    "postinstall-build": "0.2.x",
     "repeat-string": "aleclarson/repeat-string#1.5.4",
     "sync": "aleclarson/sync#1.0.0"
   },
-  "lotus": {
-    "plugins": [
-      "lotus-coffee"
-    ],
-    "implicitDependencies": [
-      "child_process"
-    ]
-  }
+  "devDependencies": {
+    "coffee-script": "1.9.x"
+  },
+  "implicitDependencies": [
+    "child_process"
+  ]
 }

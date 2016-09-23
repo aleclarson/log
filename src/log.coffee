@@ -1,85 +1,81 @@
 
-require "isNodeJS"
-
-childProcess = require "child_process" if isNodeJS
+isReactNative = require "isReactNative"
 repeatString = require "repeat-string"
-didExit = require "didExit"
+clampValue = require "clampValue"
+isNodeJS = require "isNodeJS"
 Logger = require "Logger"
-Void = require "Void"
 Type = require "Type"
 hook = require "hook"
 
-Cursor = require "./Cursor"
-
-isTTY = isNodeJS and (process.stdout?.isTTY is yes)
+{stdout} = process
+isTTY = isNodeJS and stdout.isTTY
 
 type = Type "MainLogger"
 
 type.inherits Logger
 
-type.defineFrozenValues
+type.defineValues
 
-  cursor: isTTY and -> Cursor this
+  _offset: 0
 
-  _process: ->
+  _print: ->
 
-    if not isNodeJS
-      @_print = (message) ->
+    if isReactNative and global.nativeLoggingHook
+      return (message) ->
+        global.nativeLoggingHook message, 1
         console.log message
-      return null
 
-    if process.stdout
-      @_print = (message) ->
-        process.stdout.write message
+    if stdout
+      return (message) ->
+        stdout.write message
 
-    return process
+    return console.log.bind console
 
-isNodeJS and type.initInstance ->
-
+isNodeJS and
+type.initInstance ->
   @isColorful = isTTY
-
-  if isTTY
-
-    hook.after this, "_printChunk", (result, chunk) ->
-      if chunk.message is @ln then @cursor._x = 0
-      else @cursor._x += chunk.length
-
-    @cursor.isHidden = yes
-    didExit 1, =>
-      @cursor.isHidden = no
+  isTTY and hook.after this, "_printChunk", (_, chunk) ->
+    if chunk.message is @ln then @_offset = 0
+    else @_offset += chunk.length
 
 type.defineGetters
 
-  size: ->
-    return null if not isTTY
-    return @_process.stdout.getWindowSize()
+  offset: -> @_offset
 
-isTTY and type.overrideMethods
+  size:
+    if isTTY then -> stdout.getWindowSize()
+    else -> null
 
-  __willClear: ->
+isTTY and
+type.defineMethods
 
-    @cursor._x = @cursor._y = 0
+  setOffset: (offset) ->
+    oldValue = @_offset
+    newValue = clampValue offset, 0, @size[0]
+    if newValue isnt oldValue
+      @_offset = newValue
+      @ansi ansi =
+        if newValue > oldValue
+        then "#{newValue - oldValue}C"
+        else "#{oldValue - newValue}D"
+    return
 
-    @_print childProcess.execSync "printf '\\33c\\e[3J'", encoding: "utf8"
+  setLine: (line) ->
+    oldValue = @_line
+    newValue = clampValue line, 0, @lines.length
+    if newValue isnt oldValue
+      @_line = newValue
+      @ansi ansi =
+        if newValue > oldValue
+        then "#{newValue - oldValue}E"
+        else "#{oldValue - newValue}F"
+    return
 
-  __willClearLine: (line) ->
-
-    isCurrentLine = line.index is @_line
-
-    if isCurrentLine
-      @cursor.x = 0
-
-    else
-      @cursor.save()
-      @cursor.move x: 0, y: line.index
-
-    message = repeatString " ", line.length
-    @_printToChunk message, { line: line.index, hidden: yes }
-
-    if isCurrentLine
-      @cursor.x = 0
-
-    else
-      @cursor.restore()
+  clearLine: ->
+    @setOffset 0
+    message = repeatString " ", @line.length
+    @_printToChunk message, {line: @_line, hidden: yes}
+    @setOffset 0
+    return
 
 module.exports = type.construct()
