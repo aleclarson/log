@@ -1,4 +1,5 @@
 
+isReactNative = require "isReactNative"
 repeatString = require "repeat-string"
 clampValue = require "clampValue"
 isNodeJS = require "isNodeJS"

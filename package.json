@@ -15,6 +15,7 @@
     "clampValue": "aleclarson/clampValue#1.0.0",
     "hook": "aleclarson/hook#1.0.0",
     "isNodeJS": "aleclarson/isNodeJS#2.0.0",
+    "isReactNative": "aleclarson/isReactNative#2.0.0",
     "postinstall-build": "0.2.x",
     "repeat-string": "aleclarson/repeat-string#1.5.4",
     "sync": "aleclarson/sync#1.0.0"
