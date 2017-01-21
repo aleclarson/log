@@ -6,8 +6,8 @@ isNodeJS = require "isNodeJS"
 Logger = require "Logger"
 Type = require "Type"
 
-{stdout} = process
-isTTY = isNodeJS and stdout.isTTY
+if stdout = process.stdout
+  isTTY = stdout.isTTY
 
 type = Type "MainLogger"
 
