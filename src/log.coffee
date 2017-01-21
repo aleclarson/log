@@ -38,6 +38,12 @@ type.defineGetters
 isTTY and
 type.defineMethods
 
+  updateLine: (contents) ->
+    {line} = this
+    line.contents = contents
+    line.length = contents.length
+    @caret.x = line.length
+    return
 
   clearLine: ->
     {line} = this
