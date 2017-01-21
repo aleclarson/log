@@ -35,10 +35,6 @@ type.defineGetters
 
   offset: -> @_offset
 
-  size:
-    if isTTY then -> stdout.getWindowSize()
-    else -> null
-
 isTTY and
 type.defineMethods
 
