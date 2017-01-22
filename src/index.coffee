@@ -4,6 +4,7 @@ Type = require "Type"
 sync = require "sync"
 
 log = require "./log"
+log.caret = require "./caret"
 
 # Add pretty formatting for 'Type::optionTypes.toString()'
 Type.Builder._stringifyTypes = (types) ->
