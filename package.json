@@ -1,0 +1,17 @@
+{
+  "name": "log",
+  "version": "2.1.0",
+  "main": "js/index",
+  "dependencies": {
+    "Logger": "aleclarson/Logger#2.0.3",
+    "Type": "aleclarson/Type#2.2.0",
+    "assertType": "aleclarson/assertType#2.0.1",
+    "clampValue": "aleclarson/clampValue#1.0.0",
+    "didExit": "aleclarson/didExit#1.0.2",
+    "isNodeJS": "aleclarson/isNodeJS#2.0.0",
+    "isReactNative": "aleclarson/isReactNative#2.0.0",
+    "isType": "aleclarson/isType#1.0.1",
+    "repeat-string": "aleclarson/repeat-string#1.5.4",
+    "sync": "aleclarson/sync#1.0.1"
+  }
+}
