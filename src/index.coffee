@@ -1,10 +1,13 @@
 
+isNodeJS = require "isNodeJS"
 isType = require "isType"
 Type = require "Type"
 sync = require "sync"
 
 log = require "./log"
-log.caret = require "./caret"
+
+if isNodeJS
+  log.caret = require "./caret"
 
 # Add pretty formatting for 'Type::optionTypes.toString()'
 Type.Builder._stringifyTypes = (types) ->

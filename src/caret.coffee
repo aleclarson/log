@@ -17,6 +17,8 @@ type.defineValues ->
 
   _restoredPositions: []
 
+  _exitListener: null
+
 type.defineFrozenValues
 
   _printListener: ->
@@ -24,13 +26,7 @@ type.defineFrozenValues
       if chunk.message is log.ln
       then @_x = 0
       else @_x += chunk.length
-    .start()
-
-type.initInstance ->
-  @isHidden = yes
-  didExit 1, =>
-    @isHidden = no
-  .start()
+      return
 
 #
 # Prototype
@@ -86,6 +82,7 @@ type.definePrototype
       if newValue isnt oldValue
         @_hidden = newValue
         log.ansi "?25" + if newValue then "l" else "h"
+        @_exitListener ?= didExit.once => @isHidden = no
       return
 
   _y:
