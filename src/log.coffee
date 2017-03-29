@@ -15,7 +15,7 @@ type.inherits Logger
 
 type.defineValues
 
-  _print: ->
+  _print: do ->
 
     if isReactNative and global.nativeLoggingHook
       return (message) ->
