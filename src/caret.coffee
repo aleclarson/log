@@ -19,14 +19,11 @@ type.defineValues ->
 
   _exitListener: null
 
-type.defineFrozenValues
-
-  _printListener: ->
-    log.willPrint (chunk) =>
-      if chunk.message is log.ln
-      then @_x = 0
-      else @_x += chunk.length
-      return
+  _printListener: log.willPrint (chunk) =>
+    if chunk.message is log.ln
+    then @_x = 0
+    else @_x += chunk.length
+    return
 
 #
 # Prototype
